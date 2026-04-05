@@ -1,0 +1,13 @@
+{
+  "name": "prompt-engineering",
+  "version": "0.1.0",
+  "description": "Claude Code 시스템 프롬프트 아키텍처 기반 프롬프트 엔지니어링 스킬. 프롬프트 작성, 분석, 패턴 참조를 지원한다.",
+  "author": {
+    "name": "sanghyunpark",
+    "url": "https://github.com/Hoyuo"
+  },
+  "repository": "https://github.com/Hoyuo/hoyuo-cc-plugin",
+  "license": "MIT",
+  "keywords": ["prompt", "engineering", "system-prompt", "claude-code", "architecture"],
+  "category": "development-tools"
+}

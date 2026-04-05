@@ -1,0 +1,13 @@
+{
+  "name": "default-setup",
+  "version": "0.1.0",
+  "description": "팀 공용 Claude Code 기본 환경 셋업 — CLAUDE.md와 settings.json을 프로젝트에 적용한다.",
+  "author": {
+    "name": "sanghyunpark",
+    "url": "https://github.com/Hoyuo"
+  },
+  "repository": "https://github.com/Hoyuo/hoyuo-cc-plugin",
+  "license": "MIT",
+  "keywords": ["setup", "settings", "guidelines", "team", "configuration"],
+  "category": "configuration"
+}

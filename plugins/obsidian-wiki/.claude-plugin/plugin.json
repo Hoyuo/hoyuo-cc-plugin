@@ -1,0 +1,13 @@
+{
+  "name": "obsidian-wiki",
+  "version": "0.1.0",
+  "description": "Obsidian 기반 LLM Knowledge Base — raw 데이터를 wiki로 컴파일하고, 인덱싱, Q&A, 린팅을 수행한다.",
+  "author": {
+    "name": "sanghyunpark",
+    "url": "https://github.com/Hoyuo"
+  },
+  "repository": "https://github.com/Hoyuo/hoyuo-cc-plugin",
+  "license": "MIT",
+  "keywords": ["obsidian", "wiki", "knowledge-base", "llm", "markdown"],
+  "category": "knowledge-management"
+}
