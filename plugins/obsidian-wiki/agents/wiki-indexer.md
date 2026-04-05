@@ -1,6 +1,6 @@
 ---
 name: wiki-indexer
-description: "wiki/_index.md를 자동 생성/갱신하는 에이전트. 전체 문서를 스캔하여 인덱스, 카테고리, 백링크를 관리한다."
+description: "wiki/_index.md를 자동 생성/갱신하는 에이전트. sources/concepts/topics 전체 문서를 스캔하여 인덱스, 카테고리, 태그별 목록을 관리한다."
 model: haiku
 color: blue
 tools:
@@ -32,10 +32,10 @@ wiki/ 전체를 스캔하여 _index.md를 생성/갱신하는 에이전트.
 
 ## 작업 절차
 
-1. `wiki/concepts/` 와 `wiki/topics/` 의 모든 .md 파일을 Glob으로 수집
-2. 각 파일의 frontmatter를 Read하여 title, tags, updated, summary 추출
+1. `wiki/sources/`, `wiki/concepts/`, `wiki/topics/` 의 모든 .md 파일을 Glob으로 수집
+2. 각 파일의 frontmatter를 Read하여 title, tags, type, updated, summary 추출
 3. summary는 `> [!summary]` callout 내용을 파싱
-4. 카테고리별로 분류 (concepts, topics)
+4. 카테고리별로 분류 (sources, concepts, topics)
 5. 태그별 그룹핑
 6. 최근 업데이트 목록 생성 (최근 10개)
 7. _index.md를 Write
@@ -47,6 +47,7 @@ wiki/ 전체를 스캔하여 _index.md를 생성/갱신하는 에이전트.
 title: Wiki Index
 updated: YYYY-MM-DD
 total_articles: N
+total_sources: N
 total_concepts: N
 total_topics: N
 ---
@@ -54,7 +55,12 @@ total_topics: N
 # Wiki Index
 
 > [!info]
-> 총 N개 문서 | Concepts: N | Topics: N | 최종 업데이트: YYYY-MM-DD
+> 총 N개 문서 | Sources: N | Concepts: N | Topics: N | 최종 업데이트: YYYY-MM-DD
+
+## Sources
+
+- [[소스A]] — 한줄 요약 `#tag1` `#tag2`
+- [[소스B]] — 한줄 요약 `#tag1`
 
 ## Concepts
 
@@ -80,6 +86,7 @@ total_topics: N
 
 | 날짜 | 문서 | 유형 |
 |------|------|------|
+| YYYY-MM-DD | [[소스A]] | source |
 | YYYY-MM-DD | [[개념A]] | concept |
 | YYYY-MM-DD | [[주제A]] | topic |
 ```
@@ -91,3 +98,4 @@ total_topics: N
 - 요약이 없는 문서는 "(요약 없음)" 으로 표시
 - 알파벳/가나다 순으로 정렬
 - updated가 없는 문서는 created를 사용
+- type 필드가 없는 문서는 디렉토리 경로로 유형을 판단 (sources/, concepts/, topics/)
