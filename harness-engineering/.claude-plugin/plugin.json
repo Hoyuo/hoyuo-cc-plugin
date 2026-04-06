@@ -1,0 +1,13 @@
+{
+  "name": "harness-engineering",
+  "version": "0.1.0",
+  "description": "Claude Code 하네스 엔지니어링 — 하네스 구축(init·step·validate·score)과 실행(plan·exec·eval·update)을 단계별로 수행한다.",
+  "author": {
+    "name": "sanghyunpark",
+    "url": "https://github.com/Hoyuo"
+  },
+  "repository": "https://github.com/Hoyuo/hoyuo-cc-plugin",
+  "license": "MIT",
+  "keywords": ["harness", "engineering", "claude-code", "system-prompt", "pipeline"],
+  "category": "development-tools"
+}

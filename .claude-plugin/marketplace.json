@@ -10,20 +10,26 @@
     {
       "name": "obsidian-wiki",
       "description": "Obsidian 기반 LLM Knowledge Base — raw 데이터를 wiki로 컴파일하고, 인덱싱, Q&A, 린팅을 수행한다.",
-      "source": "./plugins/obsidian-wiki",
+      "source": "./obsidian-wiki",
       "category": "knowledge-management"
     },
     {
       "name": "prompt-engineering",
       "description": "Claude Code 시스템 프롬프트 아키텍처 기반 프롬프트 엔지니어링 스킬. 프롬프트 작성, 분석, 패턴 참조를 지원한다.",
-      "source": "./plugins/prompt-engineering",
+      "source": "./prompt-engineering",
       "category": "development-tools"
     },
     {
       "name": "default-setup",
       "description": "팀 공용 Claude Code 기본 환경 셋업 — CLAUDE.md와 settings.json을 프로젝트에 적용한다.",
-      "source": "./plugins/default-setup",
+      "source": "./default-setup",
       "category": "configuration"
+    },
+    {
+      "name": "harness-engineering",
+      "description": "Claude Code 하네스 엔지니어링 — 하네스 구축(init·step·validate·score)과 실행(plan·exec·eval·update)을 단계별로 수행한다.",
+      "source": "./harness-engineering",
+      "category": "development-tools"
     }
   ]
 }
