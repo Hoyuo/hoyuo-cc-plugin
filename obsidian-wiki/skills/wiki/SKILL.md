@@ -1,8 +1,8 @@
 ---
 name: wiki
-description: Obsidian 기반 LLM Knowledge Base 관리. 대화형 증분 컴파일, 소스 타입별 추출, 백링크 감사, 모순 감지, 환각 방지, lint-and-heal을 수행한다. "/wiki compile", "/wiki qa", "/wiki lint", "/wiki ingest", "/wiki index", "/wiki status", "/wiki file", "/wiki overview" 등으로 호출.
+description: Obsidian 기반 LLM Knowledge Base 관리. 대화형 증분 컴파일, 소스 타입별 추출, 백링크 감사, 모순 감지, 환각 방지, lint-and-heal을 수행한다. "/wiki compile", "/wiki qna", "/wiki lint", "/wiki ingest", "/wiki index", "/wiki status", "/wiki file", "/wiki overview" 등으로 호출.
 user-invocable: true
-argument-hint: "<command> [args] — compile | index | qa | lint | ingest | status | file | overview"
+argument-hint: "<command> [args] — compile | index | qna | lint | ingest | status | file | overview"
 allowed-tools: "Read,Write,Edit,Glob,Grep,Bash,Agent,WebFetch"
 ---
 
@@ -26,9 +26,9 @@ RAG처럼 매번 원본에서 재검색하는 것이 아니라, 소스가 추가
 raw/                    ← 원본 소스 (사용자가 넣음, 불변)
 raw/images/             ← 클리핑 이미지
 wiki/
-  _index.md             ← 자동 관리 인덱스 (콘텐츠 카탈로그)
-  _log.md               ← 시간순 작업 기록 (append-only)
-  _overview.md          ← 전체 지식베이스 종합 문서 (진화형)
+  index.md             ← 자동 관리 인덱스 (콘텐츠 카탈로그)
+  log.md               ← 시간순 작업 기록 (append-only)
+  overview.md          ← 전체 지식베이스 종합 문서 (진화형)
   sources/              ← 소스별 요약 페이지 (raw↔wiki 연결 계층)
   concepts/             ← 단일 개념 문서
   topics/               ← 여러 개념을 아우르는 주제 문서
@@ -41,9 +41,9 @@ output/                 ← Q&A 결과, 린트 리포트
 - **wiki/sources/** — 각 raw 소스에 대한 요약 페이지. raw와 wiki를 연결하는 중간 계층. 핵심 내용, 주요 주장, 반론/한계를 포함한다. 소스 타입(article, paper, media 등)에 따라 추출 중점이 달라진다.
 - **wiki/concepts/** — 하나의 명확한 개념, 기술, 도구 (예: Transformer, RAG).
 - **wiki/topics/** — 여러 개념을 아우르는 넓은 주제 (예: LLM 아키텍처).
-- **wiki/_index.md** — 전체 문서의 카탈로그. 카테고리/태그별 분류. 쿼리 시 LLM이 먼저 읽어 관련 문서를 찾는다.
-- **wiki/_log.md** — 모든 작업의 시간순 기록. parseable 포맷으로 `grep "^## \[" wiki/_log.md | tail -5` 같은 명령으로 조회 가능.
-- **wiki/_overview.md** — 전체 지식베이스의 종합 요약. 소스가 추가될 때마다 진화하는 살아있는 문서.
+- **wiki/index.md** — 전체 문서의 카탈로그. 카테고리/태그별 분류. 쿼리 시 LLM이 먼저 읽어 관련 문서를 찾는다.
+- **wiki/log.md** — 모든 작업의 시간순 기록. parseable 포맷으로 `grep "^## \[" wiki/log.md | tail -5` 같은 명령으로 조회 가능.
+- **wiki/overview.md** — 전체 지식베이스의 종합 요약. 소스가 추가될 때마다 진화하는 살아있는 문서.
 
 ## Commands
 
@@ -61,8 +61,8 @@ raw/ 소스를 읽고 wiki/ 에 Obsidian 마크다운 문서를 생성/업데이
 7. **모순 감지** — 새 정보가 기존 문서와 충돌 시 `> [!warning] 모순 감지` callout으로 플래깅
 8. **백링크 감사** — 새/수정 문서의 제목·aliases를 기존 문서에서 Grep, 매칭 시 양방향 wikilink 추가
 9. wiki-compiler 에이전트에 위임하여 문서 생성
-10. 완료 후 wiki-indexer 에이전트로 _index.md 갱신
-11. `wiki/_log.md`에 작업 기록 append
+10. 완료 후 wiki-indexer 에이전트로 index.md 갱신
+11. `wiki/log.md`에 작업 기록 append
 
 문서 생성 규칙:
 - 소스 요약 → `wiki/sources/소스명.md` (type: source, source_type: article|paper|...)
@@ -85,14 +85,14 @@ raw/ 소스를 읽고 wiki/ 에 Obsidian 마크다운 문서를 생성/업데이
 4. frontmatter에 source_url, clipped_date, source_type 기록
 5. 저장 후 사용자에게 핵심 내용을 요약 보고
 6. compile 여부를 확인하고, 승인 시 `/wiki compile` 워크플로우 실행
-7. `wiki/_log.md`에 ingest 기록 append
+7. `wiki/log.md`에 ingest 기록 append
 
 ### `/wiki index`
 
-wiki/ 전체를 스캔하여 _index.md를 재생성한다.
+wiki/ 전체를 스캔하여 index.md를 재생성한다.
 wiki-indexer 에이전트에 위임.
 
-_index.md 포맷:
+index.md 포맷:
 ```markdown
 ---
 title: Wiki Index
@@ -118,20 +118,19 @@ total_topics: N
 |------|------|------|
 ```
 
-### `/wiki qa <질문>`
+### `/wiki qna <질문>`
 
 wiki를 대상으로 질문에 답변한다.
 **위키에서만 답변한다** — LLM의 일반 지식으로 답변하지 않는다.
 
-1. _index.md를 읽어 관련 문서 파악
+1. index.md를 읽어 관련 문서 파악
 2. 관련 wiki 문서를 읽고 정보 수집. [[wikilink]]를 1단계까지 따라간다.
 3. **위키에서 답을 찾을 수 없는 경우** 명시적으로 "위키에 해당 정보가 없습니다"라고 답변하고, 어떤 소스를 추가하면 좋을지 제안한다.
 4. 답변의 모든 주장에 `[[wikilink]]` 출처를 명시한다.
 5. 소스 간 **합의점과 불일치**를 명시한다.
-6. 답변을 `output/qa-YYYY-MM-DD-제목.md` 로 저장
+6. 답변을 `output/qna-YYYY-MM-DD-제목.md` 로 저장
 7. frontmatter에 question, date, sources, informed_by 포함
-8. `wiki/_log.md`에 쿼리 기록 append
-9. **좋은 답변은 wiki에 환류**: 답변이 가치 있다면 사용자에게 `/wiki file`로 wiki에 통합할 것을 제안
+8. **좋은 답변은 wiki에 환류**: 답변이 가치 있다면 사용자에게 `/wiki file`로 wiki에 통합할 것을 제안
 
 답변 형식은 질문 유형에 맞춘다:
 - 사실 확인 → 산문 + 인라인 `[[wikilink]]` 출처
@@ -161,19 +160,19 @@ wiki-linter 에이전트에 위임.
 - 각 이슈에 구체적인 수정 방안을 제시
 - 사용자가 승인하면 자동 수정 (heal) 수행 — 적용 전 diff 확인
 - 결과를 `output/lint-report-YYYY-MM-DD.md` 에 저장
-- `wiki/_log.md`에 린트 기록 append
+- `wiki/log.md`에 린트 기록 append
 
 ### `/wiki overview`
 
-전체 지식베이스의 종합 문서(_overview.md)를 생성하거나 갱신한다.
+전체 지식베이스의 종합 문서(overview.md)를 생성하거나 갱신한다.
 
-1. _overview.md가 없으면 새로 생성, 있으면 갱신
-2. _index.md와 주요 문서를 읽어 전체 지식의 흐름을 파악
+1. overview.md가 없으면 새로 생성, 있으면 갱신
+2. index.md와 주요 문서를 읽어 전체 지식의 흐름을 파악
 3. 주요 발견, 핵심 주제, 미해결 질문, 지식 격차를 정리
 4. 소스 간 관계와 종합적 통찰을 서술
-5. `wiki/_log.md`에 overview 갱신 기록 append
+5. `wiki/log.md`에 overview 갱신 기록 append
 
-_overview.md 포맷:
+overview.md 포맷:
 ```markdown
 ---
 title: Knowledge Base Overview
@@ -229,7 +228,7 @@ output/ 의 Q&A 결과를 wiki에 축적한다.
 3. 통합 시 기존 문서 업데이트 또는 새 문서 생성 판단
 4. wiki-compiler 에이전트에 위임 (백링크 감사 포함)
 5. 완료 후 인덱스 갱신
-6. `wiki/_log.md`에 환류 기록 append (promote 태그)
+6. `wiki/log.md`에 환류 기록 append (promote 태그)
 
 ## 소스 타입 분류
 
@@ -327,8 +326,8 @@ aliases:
 
 ## 로그 형식
 
-`wiki/_log.md`는 append-only 시간순 기록이다. 모든 커맨드 실행 시 기록한다.
-`grep "^## \[" wiki/_log.md | tail -10` 으로 최근 작업 조회 가능.
+`wiki/log.md`는 append-only 시간순 기록이다. 모든 커맨드 실행 시 기록한다.
+`grep "^## \[" wiki/log.md | tail -10` 으로 최근 작업 조회 가능.
 
 ```markdown
 # Wiki Log
@@ -346,12 +345,6 @@ aliases:
 - 소스 타입: article
 - 저장: [[raw/YYYY-MM-DD-제목]]
 
-## [YYYY-MM-DD] qa | 질문 요약
-- 질문: "원래 질문"
-- 답변: [[output/qa-YYYY-MM-DD-제목]]
-- 참조 문서: N개
-- 격차 발견: "위키에 X 정보 없음"
-
 ## [YYYY-MM-DD] lint
 - 검사 문서: N개
 - HIGH: N, MEDIUM: N, LOW: N, INFO: N
@@ -362,8 +355,8 @@ aliases:
 - 반영 소스: N개
 - 신규 통찰: N건
 
-## [YYYY-MM-DD] promote | 환류 문서 제목
-- 원본: [[output/qa-파일]]
+## [YYYY-MM-DD] file | 환류 문서 제목
+- 원본: [[output/qna-파일]]
 - 통합: [[concepts/문서명]] (업데이트)
 ```
 
@@ -375,8 +368,8 @@ aliases:
 - **백링크 감사**: 문서 생성/수정 시 반드시 기존 문서에서 관련 언급을 검색하여 양방향 링크를 추가한다.
 - **대화형 컴파일**: 자율 모드 명시 요청이 없으면 컴파일 전에 takeaway를 보고하고 사용자 확인을 받는다.
 - 문서 간 연결은 반드시 `[[wikilink]]` 형식을 사용한다
-- 모든 문서 변경 시 _index.md를 업데이트한다
-- 모든 작업 시 _log.md에 기록을 append한다
+- 모든 문서 변경 시 index.md를 업데이트한다
+- 모든 작업 시 log.md에 기록을 append한다
 - 한국어가 기본이나, 원문이 영어인 경우 핵심 용어는 영어 병기
 - type 필드로 문서 유형을 명시한다 (source, concept, topic)
 - source 타입 문서는 source_type 필드로 소스 종류를 명시한다
@@ -384,8 +377,8 @@ aliases:
 - 기존 문서 업데이트 시 updated 날짜를 갱신한다
 - 모순 발견 시 기존 내용을 삭제하지 않고 양쪽을 보존하며 callout으로 플래깅한다
 - 소스가 하나뿐인 개념은 "반론 및 데이터 격차" 섹션을 포함한다
-- 좋은 Q&A 답변은 wiki에 환류(promote)할 것을 제안한다
-- qa 답변 시 위키에서 답을 찾을 수 없으면 명시적으로 알리고 소스 추가를 제안한다
+- 좋은 QnA 답변은 wiki에 환류(promote)할 것을 제안한다
+- qna 답변 시 위키에서 답을 찾을 수 없으면 명시적으로 알리고 소스 추가를 제안한다
 
 ## 안티패턴 (하지 말 것)
 

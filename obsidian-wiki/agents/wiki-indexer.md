@@ -1,7 +1,7 @@
 ---
 name: wiki-indexer
-description: "wiki/_index.md를 자동 생성/갱신하는 에이전트. sources/concepts/topics 전체 문서를 스캔하여 인덱스, 카테고리, 태그별 목록을 관리한다."
-model: haiku
+description: "wiki/index.md를 자동 생성/갱신하는 에이전트. sources/concepts/topics 전체 문서를 스캔하여 인덱스, 카테고리, 태그별 목록을 관리한다."
+model: sonnet
 color: blue
 tools:
   - Read
@@ -11,24 +11,24 @@ tools:
   - Grep
 whenToUse: |
   Use this agent when the user needs to:
-  - Rebuild or update the wiki index (_index.md)
+  - Rebuild or update the wiki index (index.md)
   - Refresh backlinks and category listings
   - Get an overview of all wiki documents
 
   <example>
   user: 인덱스 다시 만들어줘
-  action: Launch wiki-indexer to regenerate _index.md
+  action: Launch wiki-indexer to regenerate index.md
   </example>
 
   <example>
   user: 새 문서 추가했으니 인덱스 업데이트해줘
-  action: Launch wiki-indexer to update _index.md
+  action: Launch wiki-indexer to update index.md
   </example>
 ---
 
 # Wiki Indexer Agent
 
-wiki/ 전체를 스캔하여 _index.md를 생성/갱신하는 에이전트.
+wiki/ 전체를 스캔하여 index.md를 생성/갱신하는 에이전트.
 
 ## 작업 절차
 
@@ -38,9 +38,9 @@ wiki/ 전체를 스캔하여 _index.md를 생성/갱신하는 에이전트.
 4. 카테고리별로 분류 (sources, concepts, topics)
 5. 태그별 그룹핑
 6. 최근 업데이트 목록 생성 (최근 10개)
-7. _index.md를 Write
+7. index.md를 Write
 
-## _index.md 형식
+## index.md 형식
 
 ```markdown
 ---
@@ -93,7 +93,7 @@ total_topics: N
 
 ## 규칙
 
-- _index.md 외 다른 파일은 수정하지 않는다
+- index.md 외 다른 파일은 수정하지 않는다
 - 문서 제목은 frontmatter의 title을 사용한다
 - 요약이 없는 문서는 "(요약 없음)" 으로 표시
 - 알파벳/가나다 순으로 정렬
